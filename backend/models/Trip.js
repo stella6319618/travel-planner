@@ -45,6 +45,11 @@ const daySchema = new mongoose.Schema({
 });
 
 const tripSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   destination: {
     type: String,
     required: true,

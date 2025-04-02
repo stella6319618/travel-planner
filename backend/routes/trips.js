@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Trip = require("../models/Trip");
 const axios = require("axios");
+const auth = require("../middleware/auth");
 
 // 地理編碼路由
 router.get("/geocode", async (req, res) => {
@@ -51,9 +52,10 @@ router.get("/geocode", async (req, res) => {
 });
 
 // Get all trips
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const trips = await Trip.find();
+    const userId = req.user.id;
+    const trips = await Trip.find({ user: userId }).sort({ startDate: 1 });
     res.json(trips);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -61,29 +63,38 @@ router.get("/", async (req, res) => {
 });
 
 // Get a single trip
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   try {
-    const trip = await Trip.findById(req.params.id);
-    if (trip) {
-      res.json(trip);
-    } else {
-      res.status(404).json({ message: "Trip not found" });
+    const trip = await Trip.findOne({
+      _id: req.params.id,
+      user: req.user.id, // 確保只能查自己資料
+    });
+
+    if (!trip) {
+      return res
+        .status(404)
+        .json({ message: "Trip not found or unauthorized" });
     }
+
+    res.json(trip);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 // Create a new trip
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
+  const userId = req.user.id;
+
   const trip = new Trip({
+    user: userId,
     destination: req.body.destination,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     days: [],
   });
 
-  // Generate days between start and end date
+  // 同樣產生每一天
   const startDate = new Date(req.body.startDate);
   const endDate = new Date(req.body.endDate);
   const currentDate = new Date(startDate);
@@ -104,20 +115,23 @@ router.post("/", async (req, res) => {
 });
 
 // Update a trip
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", auth, async (req, res) => {
   try {
-    const trip = await Trip.findById(req.params.id);
-    if (trip) {
-      if (req.body.destination) trip.destination = req.body.destination;
-      if (req.body.startDate) trip.startDate = req.body.startDate;
-      if (req.body.endDate) trip.endDate = req.body.endDate;
-      if (req.body.days) trip.days = req.body.days;
-
-      const updatedTrip = await trip.save();
-      res.json(updatedTrip);
-    } else {
-      res.status(404).json({ message: "Trip not found" });
+    const trip = await Trip.findOne({ _id: req.params.id, user: req.user.id });
+    if (!trip) {
+      return res
+        .status(404)
+        .json({ message: "Trip not found or unauthorized" });
     }
+
+    // 更新欄位
+    if (req.body.destination) trip.destination = req.body.destination;
+    if (req.body.startDate) trip.startDate = req.body.startDate;
+    if (req.body.endDate) trip.endDate = req.body.endDate;
+    if (req.body.days) trip.days = req.body.days;
+
+    const updatedTrip = await trip.save();
+    res.json(updatedTrip);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -252,12 +266,17 @@ router.delete(
 );
 
 // Delete a trip
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
-    const trip = await Trip.findByIdAndDelete(req.params.id);
+    const trip = await Trip.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id, // 確保是自己的 trip 才能刪
+    });
+
     if (!trip) {
-      return res.status(404).json({ message: "找不到此旅程" });
+      return res.status(404).json({ message: "找不到此旅程或無權限刪除" });
     }
+
     res.json({ message: "旅程已刪除" });
   } catch (error) {
     res.status(500).json({ message: error.message });

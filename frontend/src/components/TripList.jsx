@@ -71,10 +71,15 @@ function TripList() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">我的旅程</h1>
+        <Link
+          to="/trips/new"
+          className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md"
+        >
+          新增行程
+        </Link>
       </div>
-
       {showCreateForm && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">新增旅程</h2>

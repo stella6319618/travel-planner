@@ -39,7 +39,10 @@ mongoose.connection.on("disconnected", () => {
 
 // Routes
 const tripRoutes = require("./routes/trips");
+const userRoutes = require("./routes/users");
+
 app.use("/api/trips", tripRoutes);
+app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
