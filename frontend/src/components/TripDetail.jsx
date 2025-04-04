@@ -10,7 +10,6 @@ import {
   Polyline,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet-arrowheads";
 import "leaflet-polylinedecorator";
 import { useState, useEffect } from "react";
 import L from "leaflet";
