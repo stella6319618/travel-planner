@@ -17,29 +17,33 @@ const mongooseOptions = {
   socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
 };
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI, mongooseOptions)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1); // Exit the process if MongoDB connection fails
-  });
+// // Connect to MongoDB
+// mongoose
+//   .connect(process.env.MONGODB_URI, mongooseOptions)
+//   .then(() => {
+//     console.log("Connected to MongoDB");
+//   })
+//   .catch((err) => {
+//     console.error("MongoDB connection error:", err);
+//     process.exit(1); // Exit the process if MongoDB connection fails
+//   });
 
-// Handle MongoDB connection errors after initial connection
-mongoose.connection.on("error", (err) => {
-  console.error("MongoDB connection error:", err);
-});
+// // Handle MongoDB connection errors after initial connection
+// mongoose.connection.on("error", (err) => {
+//   console.error("MongoDB connection error:", err);
+// });
 
-mongoose.connection.on("disconnected", () => {
-  console.log("MongoDB disconnected");
-});
+// mongoose.connection.on("disconnected", () => {
+//   console.log("MongoDB disconnected");
+// });
 
 // Routes
 const tripRoutes = require("./routes/trips");
 const userRoutes = require("./routes/users");
+
+app.get('/', (req, res) => {
+  res.send('✅ Backend is running!');
+});
 
 app.use("/api/trips", tripRoutes);
 app.use("/api/users", userRoutes);
