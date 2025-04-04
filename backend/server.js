@@ -37,7 +37,7 @@ const mongooseOptions = {
 //   console.log("MongoDB disconnected");
 // });
 
-// Routes 
+// Routes 123
 const tripRoutes = require("./routes/trips");
 const userRoutes = require("./routes/users");
 
