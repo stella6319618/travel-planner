@@ -42,7 +42,7 @@ const tripRoutes = require("./routes/trips");
 const userRoutes = require("./routes/users");
 
 app.get('/', (req, res) => {
-  res.send('✅ Backend is running!Test');
+  res.send('✅ Backend is running!');
 });
 
 app.use("/api/trips", tripRoutes);

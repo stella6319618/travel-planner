@@ -25,11 +25,13 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Deploy to Cloud Run
+      - name: Build to Cloud Run
         run: |
           gcloud builds submit backend \
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend
 
+      - name: Deploy to Cloud Run
+        run: |
           gcloud run deploy travel-backend \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend \
             --platform managed \
