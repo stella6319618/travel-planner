@@ -11,11 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup working directory
+        run: cd frontend
+
       - name: Install dependencies
         run: npm install
+        working-directory: frontend
 
       - name: Build
         run: npm run build
+        working-directory: frontend
 
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -24,3 +29,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRAVEL_PLANNER_335A8 }}
           channelId: live
           projectId: travel-planner-335a8
+          entryPoint: frontend
