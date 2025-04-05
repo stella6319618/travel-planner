@@ -25,10 +25,11 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build to Cloud Run
+      - name: Build Container Image (Async) # <--- 可以改個名字標示一下
         run: |
           gcloud builds submit backend \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend \
+            --async # <--- 加入這個旗標
 
       - name: Deploy to Cloud Run
         run: |
