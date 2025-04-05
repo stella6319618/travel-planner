@@ -25,18 +25,15 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build Container Image with unique tag # <--- 修改步驟名稱
+      - name: Build Container Image with unique tag
         run: |
           gcloud builds submit backend \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }} # <--- 在映像檔名稱後面加上 :${{ github.sha }}
-
-      # 這個建置步驟仍然可以保留 --async (如果需要避免日誌串流問題)
-      # 或者，如果您已經解決了權限/VPC-SC 問題，可以移除 --async
-
-      - name: Deploy to Cloud Run with unique tag # <--- 修改步驟名稱
-        run: |
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }} 
+      
+      - name: Deploy to Cloud Run with unique tag
+        run: | 
           gcloud run deploy travel-backend \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }} \ # <--- 部署時也指定同一個 :${{ github.sha }} 標籤
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }} \
             --platform managed \
             --region asia-east1 \
             --allow-unauthenticated
