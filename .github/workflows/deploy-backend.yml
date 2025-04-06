@@ -28,13 +28,13 @@ jobs:
       - name: Build Container Image with unique tag
         run: |
           gcloud builds submit backend \
-            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }} 
-      
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }}
+
       - name: Deploy to Cloud Run with unique tag
-        run: | 
+        run: |
           gcloud run deploy travel-backend \
             --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/travel-backend:${{ github.sha }} \
             --platform managed \
             --region asia-east1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
             --set-env-vars MONGODB_URI=${{ secrets.MONGODB_URI }}
