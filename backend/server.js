@@ -44,6 +44,8 @@ app.get("/", (req, res) => {
   res.send("✅ Backend is running!??");
 });
 
+console.log("JWT_SECRET is:", process.env.JWT_SECRET);
+
 app.use("/api/trips", tripRoutes);
 app.use("/api/users", userRoutes);
 
