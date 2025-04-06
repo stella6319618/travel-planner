@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api"; 
+import api from "../../utility/api";
+
 
 function CreateTrip() {
   const {
