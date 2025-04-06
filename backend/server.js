@@ -41,7 +41,7 @@ const tripRoutes = require("./routes/trips");
 const userRoutes = require("./routes/users");
 
 app.get("/", (req, res) => {
-  res.send("✅ Backend is running!??");
+  res.send("✅ Backend is running???");
 });
 
 console.log("JWT_SECRET is:", process.env.JWT_SECRET);
