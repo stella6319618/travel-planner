@@ -37,3 +37,4 @@ jobs:
             --platform managed \
             --region asia-east1 \
             --allow-unauthenticated
+            --set-env-vars MONGODB_URI=${{ secrets.MONGODB_URI }}
