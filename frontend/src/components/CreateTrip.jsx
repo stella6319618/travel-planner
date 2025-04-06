@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api"; 
 
 function CreateTrip() {
   const {
@@ -14,10 +14,7 @@ function CreateTrip() {
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
-        "http://localhost:5000/api/trips",
-        data
-      );
+      const response = await api.post("/api/trips", data);
       return response.data;
     },
     onSuccess: () => {

@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import api from "../../utility/api";
 
 function TripList() {
   const queryClient = useQueryClient();
@@ -19,17 +20,14 @@ function TripList() {
   } = useQuery({
     queryKey: ["trips"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/api/trips");
+      const response = await api.get("/api/trips");
       return response.data;
     },
   });
-
+  
   const createTripMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post(
-        "http://localhost:5000/api/trips",
-        data
-      );
+      const response = await api.post("/api/trips", data);
       return response.data;
     },
     onSuccess: () => {
@@ -42,12 +40,9 @@ function TripList() {
       });
     },
   });
-
+  
   const deleteTripMutation = useMutation({
-    mutationFn: async (id) => {
-      const response = await axios.delete(
-        `http://localhost:5000/api/trips/${id}`
-      );
+    mutationFn: async (id) => {      const response = await api.delete(`/api/trips/${id}`);
       return response.data;
     },
     onSuccess: () => {

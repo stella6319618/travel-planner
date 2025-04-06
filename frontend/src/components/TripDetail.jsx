@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import GeocoderControl from "./GeocoderControl";
+import api from "../utils/api";
 import EditDayModal from "./EditDayModal";
 
 // 修復 Leaflet 的圖標問題
@@ -99,15 +99,15 @@ function TripDetail() {
   } = useQuery({
     queryKey: ["trip", id],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:5000/api/trips/${id}`);
+      const response = await api.get(`/api/trips/${id}`);
       return response.data;
     },
   });
 
   const updateDayMutation = useMutation({
     mutationFn: async ({ dayIndex, data }) => {
-      const response = await axios.patch(
-        `http://localhost:5000/api/trips/${id}/days/${dayIndex}`,
+      const response = await api.patch(
+        (`/api/trips/${id}/days/${dayIndex}`,
         data
       );
       return response.data;

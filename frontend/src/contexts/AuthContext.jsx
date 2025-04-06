@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import axios from "axios";
-
+import api, { setAuthToken } from "../utils/api"; 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -13,11 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   // Set auth token for axios requests
   useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-    }
+    setAuthToken(token);
   }, [token]);
 
   // Load user on initial render if token exists
@@ -29,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const res = await axios.get("/api/users/me");
+        const res = await api.get("/api/users/me");
         setUser(res.data);
         setError(null);
       } catch (err) {
@@ -51,9 +46,8 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/users/register", userData);
+      const res = await api.post("/api/users/register", userData);
       
-      // Save token to localStorage and state
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
@@ -71,9 +65,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (userData) => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/users/login", userData);
+      const res = await api.post("/api/users/login", userData);
       
-      // Save token to localStorage and state
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
@@ -87,15 +80,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout user
   const logout = () => {
-    // Remove token from localStorage
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
   };
 
-  // Check if user is authenticated
   const isAuthenticated = !!user;
 
   return (
