@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import {
   MapContainer,
   TileLayer,
@@ -107,7 +106,7 @@ function TripDetail() {
   const updateDayMutation = useMutation({
     mutationFn: async ({ dayIndex, data }) => {
       const response = await api.patch(
-        (`/api/trips/${id}/days/${dayIndex}`,
+        `/api/trips/${id}/days/${dayIndex}`,
         data
       );
       return response.data;
